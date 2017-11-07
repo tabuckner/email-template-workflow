@@ -4,6 +4,7 @@ const browserSync = require('browser-sync').create();
 const reload = browserSync.reload;
 const htmlmin = require('gulp-htmlmin');
 const imagemin = require('gulp-imagemin');
+const post = require('gulp-post');
 
 
 gulp.task('concat', function () {
@@ -45,3 +46,18 @@ gulp.task('imgMin', () =>
 );
 
 gulp.task('build', ['imgMin', 'htmlMin']);
+
+gulp.task("testing", function () {
+  var options = {
+    callback: function (err, data) {
+      if (err) {
+        console.error(err);
+      } else {
+        console.log(data);
+      }
+    }
+  };
+  gulp.src("dist/images/*")
+    .pipe(post("https://api.imgur.com/3/image", options))
+    .pipe(gulp.dest("dist"));
+})
